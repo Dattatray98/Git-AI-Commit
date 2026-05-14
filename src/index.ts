@@ -4,6 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import process from 'process';
 import { getStagedDiff } from './git/diff';
+import { parseDiff } from './git/parser';
 
 const program = new Command();
 
@@ -30,6 +31,14 @@ program
     console.log(stdout);
   });
 
+
+program
+  .command('parsed-diff')
+  .description("shows the prased file chnage difference")
+  .action(async()=>{
+    const stdout = await getStagedDiff();
+    console.log(parseDiff(stdout));
+  })
 
 
 program.parse(process.argv);
