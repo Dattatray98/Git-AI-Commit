@@ -4,7 +4,7 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import process from 'process';
 import { getStagedDiff } from './git/diff';
-import { parseDiff } from './git/parser';
+import { filterChanges, parseDiff } from './git/parser';
 
 const program = new Command();
 
@@ -17,7 +17,7 @@ program
 program
   .command("hello")
   .description("says hello")
-  .action(()=>{
+  .action(() => {
     console.log(chalk.green('Hello world'));
     console.log(chalk.gray('This is styled text'));
   });
@@ -26,7 +26,7 @@ program
 program
   .command("diff")
   .description("shows git diff")
-  .action(async ()=>{
+  .action(async () => {
     const stdout = await getStagedDiff();
     console.log(stdout);
   });
@@ -35,18 +35,23 @@ program
 program
   .command('parsed-diff')
   .description("shows the prased file chnage difference")
-  .action(async()=>{
+  .action(async () => {
     const diff = await getStagedDiff();
 
-    if(!diff){
+    if (!diff) {
       console.log(chalk.red("No staged changes found. Did you forget to git add?"));
       process.exit(1);
     }
 
-    const changes = parseDiff(diff);
+    const changes = filterChanges(parseDiff(diff))
+
     console.log(chalk.yellow.bold(`Found ${changes.length} changed file(s)`));
 
-    console.log(changes);
+    if (changes.length === 0) {
+      console.log(chalk.red("only ignored files found."));
+      process.exit(1);
+    }
+
   });
 
 program.parse(process.argv);

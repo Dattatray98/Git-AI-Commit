@@ -21,3 +21,13 @@ export const parseDiff = (rawDiff:string): FileChange[] =>{
         return {file, additions, deletions, content:chunk};
     });
 }
+
+
+
+const IGNORED_FILES = ['package-lock.json', 'yarn.lock', 'pnpm-lock.yaml', '.DS_Store'];
+
+
+export const filterChanges = (Changes: FileChange[]):FileChange[] =>{
+    return Changes.filter(change => !IGNORED_FILES.includes(change.file));
+}
+
