@@ -6,7 +6,7 @@ import process from 'process';
 import { getStagedDiff } from './git/diff';
 import { filterChanges, parseDiff } from './git/parser';
 import { generatePrompt } from './utils/formatter';
-import { configEnv } from './config/configEnv';
+import { config } from './config';
 import { generateCommitMessage } from './Ai/generater';
 
 const program = new Command();
@@ -40,8 +40,6 @@ program
   .description("shows the prased file chnage difference")
   .action(async () => {
     const diff = await getStagedDiff();
-
-    console.log(chalk.yellow(`open ai key, ${configEnv.OPEN_API_KEY}`));
 
     if (!diff) {
       console.log(chalk.red("No staged changes found. Did you forget to git add?"));
