@@ -37,7 +37,7 @@ program
 
 
 program
-  .command('generate')
+  .command('generate-commit')
   .description("shows the prased file chnage difference")
   .action(async () => {
 
@@ -58,10 +58,13 @@ program
       const changes = filterChanges(parseDiff(diff))
       const prompt = generatePrompt(changes);
       const GeneratedCommit = await generateCommitMessage(prompt);
-      
+
       console.log('Proposed Commit Message:');
       console.log(GeneratedCommit);
 
   });
+
+
+
 
 program.parse(process.argv);
