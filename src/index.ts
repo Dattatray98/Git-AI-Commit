@@ -37,23 +37,6 @@ program
 
 
 program
-  .command('generate-commit')
-  .description("shows the prased file chnage difference")
-  .action(async () => {
-
-      validateConfig();
-      const diff = await getStagedDiff();
-      const changes = filterChanges(parseDiff(diff))
-      const prompt = generatePrompt(changes);
-      const GeneratedCommit = await generateCommitMessage(prompt);
-
-      console.log('Proposed Commit Message:');
-      console.log(GeneratedCommit);
-
-  });
-
-
-program
   .command("generate")
   .description("shows the prased file chnage difference")
   .action(async()=>{
