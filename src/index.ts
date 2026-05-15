@@ -53,13 +53,14 @@ program
       // console.log(chalk.gray(prompt));
   
   
-      // console.log('Proposed Commit Message:');
-    validateConfig();
-    const diff = await getStagedDiff();
-    const changes = filterChanges(parseDiff(diff))
-    const prompt = generatePrompt(changes);
-    const GeneratedCommit = await generateCommitMessage(prompt);
-    console.log(GeneratedCommit);
+      validateConfig();
+      const diff = await getStagedDiff();
+      const changes = filterChanges(parseDiff(diff))
+      const prompt = generatePrompt(changes);
+      const GeneratedCommit = await generateCommitMessage(prompt);
+      
+      console.log('Proposed Commit Message:');
+      console.log(GeneratedCommit);
 
   });
 
