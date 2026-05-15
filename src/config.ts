@@ -7,7 +7,7 @@ export const config= {
 };
 
 
-export const ValidationConfig = ()=>{
+export const validateConfig = ()=>{
     if (!config.OPENAI_API_KEY){
         console.error("Error : OPEN_API_KEY is missing in .env file");
         process.exit(1);

@@ -2,11 +2,10 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import process from 'process';
 import { getStagedDiff } from './git/diff';
 import { filterChanges, parseDiff } from './git/parser';
 import { generatePrompt } from './utils/formatter';
-import { ValidationConfig } from './config';
+import { validateConfig } from './config';
 import dotenv from "dotenv";
 import { generateCommitMessage } from './ai/generator';
 dotenv.config();
@@ -55,7 +54,7 @@ program
   
   
       // console.log('Proposed Commit Message:');
-    ValidationConfig();
+    validateConfig();
     const diff = await getStagedDiff();
     const changes = filterChanges(parseDiff(diff))
     const prompt = generatePrompt(changes);
