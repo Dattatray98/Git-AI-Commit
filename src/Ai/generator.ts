@@ -35,8 +35,7 @@ Generate a commit message based on the provided diff.
 `;
 
 export const generateCommitMessage = async (diff: string): Promise<string> => {
-    // Force Ollama if configured, or if explicitly requested via environment variable
-    // This allows you to toggle it locally while keeping compatibility with the test runner
+    // Priority check for Ollama test runtime environments
     const useOllama = process.env.AI_PROVIDER === "ollama" || process.env.OLLAMA_HOST || !process.env.OPENAI_API_KEY;
 
     if (useOllama) {
@@ -51,19 +50,21 @@ export const generateCommitMessage = async (diff: string): Promise<string> => {
                 }
             });
 
-            // Ensure we return clean text
-            return completion.response
+            // FIX: Grab the first element of the split array to guarantee a pure string return value
+            const lines = completion.response.split('\n');
+            const targetLine = lines[0] || '';
+
+            return targetLine
                 .trim()
                 .replace(/^["'`]/, '')
-                .replace(/["'`]$/, '')
-                .split('\n')[0]; // Safe single line retrieval
+                .replace(/["'`]$/, '');
         } catch (ollamaError) {
             console.error("Ollama execution failed:", ollamaError);
             throw ollamaError;
         }
     }
 
-    // OpenAI Code Path (Only hit if AI_PROVIDER is not ollama and OpenAI key is active)
+    // OpenAI Safe Fallback
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
@@ -75,4 +76,3 @@ export const generateCommitMessage = async (diff: string): Promise<string> => {
 
     return completion.choices?.[0]?.message?.content?.trim()!;
 };
-    
