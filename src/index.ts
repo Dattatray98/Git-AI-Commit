@@ -50,7 +50,7 @@ program
 
     const changes = filterChanges(parseDiff(diff))
 
-    console.log(chalk.yellow.bold(`Found ${changes.length} changed file(s)`));
+    // console.log(chalk.yellow.bold(`Found ${changes.length} changed file(s)`));
 
     if (changes.length === 0) {
       console.log(chalk.red("only ignored files found."));
@@ -58,7 +58,7 @@ program
     }
 
     const prompt = generatePrompt(changes);
-    console.log(chalk.gray(prompt));
+    // console.log(chalk.gray(prompt));
 
     const GeneratedCommit = await generateCommitMessage(prompt);
 

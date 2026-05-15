@@ -1,5 +1,4 @@
 import { openai } from "./openai";
-import ollama from "ollama";
 
 const SYSTEM_PROMPT = `You are a specialized commit message generator. Write a concise, conventional commit message based on the provided diff. without any single extra character, and also don't tell what you did, i want only the commit message line only. `;
 
