@@ -1,5 +1,4 @@
 import { openai } from "./openai";
-import ollama from "ollama";
 
 const SYSTEM_PROMPT = `
 You are an AI commit message generator.
@@ -35,44 +34,29 @@ Generate a commit message based on the provided diff.
 `;
 
 export const generateCommitMessage = async (diff: string): Promise<string> => {
-    // Priority check for Ollama test runtime environments
-    const useOllama = process.env.AI_PROVIDER === "ollama" || process.env.OLLAMA_HOST || !process.env.OPENAI_API_KEY;
+    // Read the model name from the environment, defaulting to the course standard
+    const modelName = process.env.OLLAMA_MODEL || "gpt-3.5-turbo";
 
-    if (useOllama) {
-        try {
-            const modelName = process.env.OLLAMA_MODEL || "llama3";
-            
-            const completion = await ollama.generate({
-                model: modelName,
-                prompt: `${SYSTEM_PROMPT}\n\nGit Diff:\n${diff}`,
-                options: {
-                    temperature: 0.1,
-                }
-            });
-
-            // FIX: Grab the first element of the split array to guarantee a pure string return value
-            const lines = completion.response.split('\n');
-            const targetLine = lines[0] || '';
-
-            return targetLine
-                .trim()
-                .replace(/^["'`]/, '')
-                .replace(/["'`]$/, '');
-        } catch (ollamaError) {
-            console.error("Ollama execution failed:", ollamaError);
-            throw ollamaError;
-        }
-    }
-
-    // OpenAI Safe Fallback
     const completion = await openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
+        model: modelName,
         messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: diff }
         ],
-        max_tokens: 200
+        max_tokens: 200,
+        temperature: 0.1
     });
 
-    return completion.choices?.[0]?.message?.content?.trim()!;
+    const content = completion.choices?.[0]?.message?.content;
+    
+    if (!content) {
+        throw new Error("No content received from completion model");
+    }
+
+    return content
+        .trim()
+        .replace(/^["'`]/, '')
+        .replace(/["'`]$/, '')
+        .split('\n')[0] // Safely grab the first element of the split array string
+        .trim();
 };
