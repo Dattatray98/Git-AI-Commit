@@ -8,7 +8,7 @@ import { filterChanges, parseDiff } from './git/parser';
 import { generatePrompt } from './utils/formatter';
 import { ValidationConfig } from './config';
 import dotenv from "dotenv";
-import { generateCommitMessage } from './Ai/generator';
+import { generateCommitMessage } from './ai/generator';
 dotenv.config();
 
 const program = new Command();
