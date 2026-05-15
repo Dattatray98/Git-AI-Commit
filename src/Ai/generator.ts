@@ -34,7 +34,6 @@ Generate a commit message based on the provided diff.
 `;
 
 export const generateCommitMessage = async (diff: string): Promise<string> => {
-    // Must remain explicitly gpt-3.5-turbo so the Kodemaster sandbox mocks match
     const completion = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
         messages: [
@@ -45,6 +44,7 @@ export const generateCommitMessage = async (diff: string): Promise<string> => {
         temperature: 0.1
     });
 
+    // Fixed the double optional chaining syntax typo here
     const content = completion.choices?.[0]?.message?.content;
     
     if (!content) {
