@@ -14,18 +14,14 @@ export const generateCommitMessage = async (diff: string): Promise<string> => {
             max_tokens: 200
         });
 
-        return completion.choices?.[0]?.message?.content!
+        return completion.choices?.[0]?.message?.content?.trim()!
 
     } catch (error) {
-
-        const completion = await ollama.chat({
+        const completion = await ollama.generate({
             model:"llama3",
-            messages: [
-                {role:"system", content:SYSTEM_PROMPT},
-                {role:"user", content:diff}
-            ]
+            prompt:`system : ${SYSTEM_PROMPT}, user: ${diff}`
         });
 
-        return completion.message.content;
+        return completion.response;
     }
 }
