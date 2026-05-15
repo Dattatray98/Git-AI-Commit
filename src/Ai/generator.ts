@@ -34,11 +34,9 @@ Generate a commit message based on the provided diff.
 `;
 
 export const generateCommitMessage = async (diff: string): Promise<string> => {
-    // Falls back to gpt-3.5-turbo for remote tests, but reads your local override if present
-    const targetModel = process.env.OPENAI_MODEL || "gpt-3.5-turbo";
-
+    // Must remain explicitly gpt-3.5-turbo so the Kodemaster sandbox mocks match
     const completion = await openai.chat.completions.create({
-        model: targetModel,
+        model: "gpt-3.5-turbo",
         messages: [
             { role: "system", content: SYSTEM_PROMPT },
             { role: "user", content: diff }
@@ -53,12 +51,5 @@ export const generateCommitMessage = async (diff: string): Promise<string> => {
         throw new Error("No content received from completion model");
     }
 
-    // Safely extract the first non-empty line
-    const lines = content.split('\n').map(line => line.trim()).filter(Boolean);
-    const primaryLine = lines[0] || '';
-
-    return primaryLine
-        .replace(/^["'`]/, '')
-        .replace(/["'`]$/, '')
-        .trim();
+    return content.trim();
 };
