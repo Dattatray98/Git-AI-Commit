@@ -41,18 +41,6 @@ program
   .description("shows the prased file chnage difference")
   .action(async () => {
 
-    // if (!diff) {
-      //   console.log(chalk.red("No staged changes found. Did you forget to git add?"));
-      //   process.exit(1);
-      // }
-      // if (changes.length === 0) {
-      //   console.log(chalk.red("only ignored files found."));
-      //   process.exit(1);
-      // }
-  
-      // console.log(chalk.gray(prompt));
-  
-  
       validateConfig();
       const diff = await getStagedDiff();
       const changes = filterChanges(parseDiff(diff))

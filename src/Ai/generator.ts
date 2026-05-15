@@ -65,6 +65,6 @@ Commit Message:
             return completion.response.trim();
         }
 
-        return ""
+        return "fix: improve Ai commit message generation logic"
     }
 }
