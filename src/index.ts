@@ -7,7 +7,7 @@ import { filterChanges, parseDiff } from './git/parser';
 import { generatePrompt } from './utils/formatter';
 import { validateConfig } from './config';
 import dotenv, { config } from "dotenv";
-import { generateCommitMessage } from './ai/generator';
+import { generateCommitMessage } from './Ai/generator';
 import { GitCommit } from './git/commit';
 dotenv.config();
 
@@ -20,15 +20,6 @@ program
 
 
 program
-  .command("hello")
-  .description("says hello")
-  .action(() => {
-    console.log(chalk.green('Hello world'));
-    console.log(chalk.gray('This is styled text'));
-  });
-
-
-program
   .command("diff")
   .description("shows git diff")
   .action(async () => {
@@ -38,7 +29,7 @@ program
 
 
 program
-  .command("generate")
+  .command("aicommit")
   .description("shows the prased file chnage difference")
   .action(async()=>{
     validateConfig();
@@ -47,8 +38,8 @@ program
     const prompt = generatePrompt(changes);
     const message = await generateCommitMessage(prompt);
 
-    console.log('Proposed Commit Message:');
-    console.log(message);
+    console.log(chalk.yellow('Proposed Commit Message:'));
+    console.log(message + "\n");
 
     const commitRes = await GitCommit(message);
     console.log(chalk.green.bold("commited following, Now push your changes!"));
