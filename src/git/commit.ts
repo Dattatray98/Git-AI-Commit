@@ -7,7 +7,7 @@ const execAsync = promisify(exec);
 
 export const GitCommit = async (message: string) => {
     try {
-        const { stdout } = await execAsync(`git commit -m ${message}`);
+        const { stdout } = await execAsync(`git commit -m ${JSON.stringify(message)}`);
         return stdout;
 
     } catch (error) {

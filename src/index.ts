@@ -51,6 +51,7 @@ program
     console.log(message);
 
     const commitRes = await GitCommit(message);
+    console.log(chalk.green.bold("commited following, Now push your changes!"));
     console.log(commitRes);
   });
 
