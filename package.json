@@ -12,7 +12,6 @@
   ],
 
   "bin": {
-    "git-ai-commit": "./dist/index.js",
     "navix": "./dist/index.js"
   },
 
