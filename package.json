@@ -4,15 +4,24 @@
   "description": "AI-powered git commit message generator",
   "author": "Dattatray Jojewar",
   "type": "module",
-  "main": "src/index.ts",
+
+  "main": "./dist/index.js",
+
+  "files": [
+    "dist"
+  ],
+
   "bin": {
-    "git-ai-commit": "./dist/core/index.js",
-    "gayc": "./src/core/index.js"
+    "git-ai-commit": "./dist/index.js",
+    "navix": "./dist/index.js"
   },
+
   "scripts": {
     "build": "bun build src/core/index.ts --outdir dist --target=node",
-    "dev": "bun run src/core/index.ts"
+    "dev": "bun run src/core/index.ts",
+    "prepare": "npm run build"
   },
+
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
@@ -20,6 +29,7 @@
     "ollama": "^0.6.3",
     "openai": "^6.37.0"
   },
+
   "devDependencies": {
     "@types/bun": "latest",
     "@types/node": "^25.7.0"
