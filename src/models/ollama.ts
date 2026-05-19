@@ -12,7 +12,6 @@ export const generateWithOllama = async (diff: string, model: string) => {
             ]
         });
 
-        console.log("response : ", response.message.content)
         return response.message.content;
     } catch (error) {
         console.log(error);

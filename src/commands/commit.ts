@@ -21,7 +21,6 @@ export const commitCommand = new Command("commit")
         const prompt = formateDiff(changes)
         const message = await generateCommitMessage(prompt)
 
-        console.log("\nmessage : ", message)
         if (!message) {
             console.log(chalk.red("Error while generating message!"));
             process.exit(1);

@@ -12,6 +12,7 @@ const program = new Command();
 
 program.addCommand(configCommand);
 program.addCommand(checkConfigCommand);
+program.addCommand(commitCommand)
 
 program
   .name('navix')
@@ -46,34 +47,6 @@ program
     console.log(chalk.yellow(`filter changes : `))
     console.log(changes)
   })
-
-
-  program.addCommand(commitCommand)
-
-// program
-//   .command("commit")
-//   .description("shows the prased file chnage difference")
-//   .action(async () => {
-//     // validateConfig();
-//     const diff = await getStagedDiff();
-    
-//     const changes = filterChanges(parseDiff(diff));
-//     const prompt = generatePrompt(changes);
-//     const message = await generateCommitMessage(prompt);
-
-//     if(!message){
-//       console.log(chalk.red("Error while generating message!"));
-//       process.exit(1);
-//     }
-    
-//     console.log(chalk.yellow('Proposed Commit Message:'));
-//     console.log(message + "\n");
-
-//     const commitRes = await GitCommit(message);
-//     console.log(chalk.green.bold("commited following, Now push your changes!"));
-//     console.log(commitRes);
-//   });
-
 
 
 
