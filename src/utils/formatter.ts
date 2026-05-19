@@ -1,6 +1,6 @@
 import { FileChange } from "../types/filetypes";
 
-export const generatePrompt = (changes: FileChange[]): string => {
+export const formateDiff = (changes: FileChange[]): string => {
     let prompt = 'Analyze the following code changes and generate a commit message.\n\n## Files Changed\n';
 
     for (const change of changes) {

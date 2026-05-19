@@ -4,19 +4,19 @@ import { Command } from 'commander';
 import chalk from 'chalk';
 import { getStagedDiff } from '../git_tools/diff';
 import { filterChanges, parseDiff } from '../git_tools/parser';
-import { generatePrompt } from '../utils/formatter';
-import { validateConfig } from '../config';
-import { generateCommitMessage } from '../ai_models/generator';
-import { GitCommit } from '../git_tools/commit';
+import configCommand from '../commands/config';
+import { commitCommand } from '../commands/commit';
 
 
 const program = new Command();
+
+program.addCommand(configCommand);
 
 program
   .name('navix')
   .description('AI-powered commit message generator')
   .version('1.0.0');
-
+  
 
 program
   .command("diff")
@@ -47,32 +47,34 @@ program
   })
 
 
-program
-  .command("commit")
-  .description("shows the prased file chnage difference")
-  .action(async () => {
-    validateConfig();
-    const diff = await getStagedDiff();
-    if (!diff) {
-      console.log(chalk.yellow("no staged chnages found! first try 'git add .' or 'git add ./filename' "));
-      process.exit(1);
-    }
-    const changes = filterChanges(parseDiff(diff));
-    const prompt = generatePrompt(changes);
-    const message = await generateCommitMessage(prompt);
+  program.addCommand(commitCommand)
 
-    if(!message){
-      console.log(chalk.red("Error while generating message!"));
-      process.exit(1);
-    }
+// program
+//   .command("commit")
+//   .description("shows the prased file chnage difference")
+//   .action(async () => {
+//     // validateConfig();
+//     const diff = await getStagedDiff();
     
-    console.log(chalk.yellow('Proposed Commit Message:'));
-    console.log(message + "\n");
+//     const changes = filterChanges(parseDiff(diff));
+//     const prompt = generatePrompt(changes);
+//     const message = await generateCommitMessage(prompt);
 
-    const commitRes = await GitCommit(message);
-    console.log(chalk.green.bold("commited following, Now push your changes!"));
-    console.log(commitRes);
-  });
+//     if(!message){
+//       console.log(chalk.red("Error while generating message!"));
+//       process.exit(1);
+//     }
+    
+//     console.log(chalk.yellow('Proposed Commit Message:'));
+//     console.log(message + "\n");
+
+//     const commitRes = await GitCommit(message);
+//     console.log(chalk.green.bold("commited following, Now push your changes!"));
+//     console.log(commitRes);
+//   });
+
+
+
 
 
 
