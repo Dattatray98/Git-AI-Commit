@@ -12,7 +12,6 @@ export const configCommand = new Command("config")
             await setupConfig(provider, model);
         }catch(error){
             console.error(error);
-            throw error;
         }
     })
 
@@ -28,7 +27,6 @@ export const checkConfigCommand = new Command("check-config")
             console.log(config)
         }catch(error){
             console.error(error)
-            throw error;
         }
     })
 

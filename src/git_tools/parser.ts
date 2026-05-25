@@ -31,7 +31,7 @@ export const parseDiff = (rawDiff: string): FileChange[] => {
 
     } catch (error: any) {
         console.error(error);
-        throw new Error(error)
+        throw error;
     }
 }
 

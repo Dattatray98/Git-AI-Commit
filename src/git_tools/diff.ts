@@ -10,7 +10,7 @@ export async function getStagedDiff(): Promise<string> {
         return stdout;
     }catch(error:any){
         console.error('Error reading git diff : ', error);
-        throw new Error(error)
+        throw error;
     }
 }
 

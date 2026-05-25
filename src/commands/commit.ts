@@ -46,6 +46,5 @@ export const commitCommand = new Command("commit")
 
         } catch (error: any) {
             console.error(error)
-            throw error;
         }
     })

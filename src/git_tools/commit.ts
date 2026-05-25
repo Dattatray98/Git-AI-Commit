@@ -12,6 +12,6 @@ export const GitCommit = async (message: string) => {
 
     } catch (error:any) {
         console.error("Error while git commit ", error);
-        throw new Error(error)
+        throw error
     }
 }

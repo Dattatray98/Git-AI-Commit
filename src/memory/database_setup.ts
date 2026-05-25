@@ -16,6 +16,6 @@ export const openDb = async () => {
         return db;
 
     } catch (error: any) {
-        throw new error
+        throw error
     }
 }

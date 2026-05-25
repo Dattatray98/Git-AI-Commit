@@ -25,6 +25,6 @@ export const Ollama_Model = async (prompt: string, model: string) => {
         
     } catch (error: any) {
         console.log(error);
-        throw new Error(error);
+        throw error;
     }
 }

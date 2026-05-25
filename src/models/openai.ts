@@ -40,6 +40,6 @@ export const generateWithOpenAI = async (diff: string, model: string) => {
 
     } catch (error: any) {
         console.error(error);
-        throw new Error(error);
+        throw error;
     }
 }
