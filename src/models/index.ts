@@ -1,6 +1,6 @@
-import { loadConfig } from "../config/config";
-import { Ollama_Model } from "./ollama";
-import { generateWithOpenAI } from "./openai";
+import { loadConfig } from "../config/config.js";
+import { Ollama_Model } from "./ollama.js";
+import { generateWithOpenAI } from "./openai.js";
 import { GenerateResponse } from "ollama"; // 1. Import the type
 
 export const generateWith = async function* (prompt: string): AsyncGenerator<string> {

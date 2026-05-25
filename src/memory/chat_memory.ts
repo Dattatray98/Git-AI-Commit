@@ -1,5 +1,5 @@
-import { openDb } from "./database_setup";
-import { chats, message } from "../types/chats";
+import { openDb } from "./database_setup.js";
+import { Chat, Message } from "../types/chats.js";
 
 export const initialize_database = async () => {
     try {
@@ -16,8 +16,8 @@ export const initialize_database = async () => {
             CREATE TABLE IF NOT EXISTS messages(
                 message_Id VARCHAR(100) PRIMARY KEY,
                 chat_Id VARCHAR(100),
-                user_message TEXT,
-                ai_message TEXT,
+                role VARCHAR(20) NOT NULL,
+                Content TEXT NOT NULL,
                 FOREIGN KEY (chat_Id) REFERENCES chats(chat_Id) ON DELETE CASCADE
             )`
         )
@@ -27,33 +27,27 @@ export const initialize_database = async () => {
     }
 };
 
-export const insert_message = async (
-    message_Id: string,
-    chat_Id: string,
-    user_message: string,
-    ai_message: string,
-    chat_title: string = "New Chat" // Added default title fallback
-) => {
+export const insert_message = async (resMessage:Message) => {
     try {
         const db = await openDb();
+        const chat_title = resMessage.content.slice(0, 25)
 
         // 1. Ensure the parent chat exists so the foreign key constraint passes
         await db.execute({
             sql: "INSERT OR IGNORE INTO chats(chat_Id, chat_title) VALUES(?, ?)",
-            args: [chat_Id, chat_title]
+            args: [resMessage.chat_Id, chat_title]
         });
 
         // 2. Insert the actual message safely
         await db.execute({
-            sql: 'INSERT INTO messages(message_Id, chat_Id, user_message, ai_message) VALUES(?,?,?,?)',
-            args: [message_Id, chat_Id, user_message, ai_message]
+            sql: 'INSERT INTO messages(message_Id, chat_Id, role, content) VALUES(?,?,?,?)',
+            args: [resMessage.message_Id, resMessage.chat_Id, resMessage.role, resMessage.content]
         });
 
     } catch (error: any) {
         throw error; // Fixed: removed 'new'
     }
 };
-
 
 export const clearChats = async () => {
     try {

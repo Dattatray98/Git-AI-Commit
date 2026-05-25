@@ -1,13 +1,11 @@
-export interface chats {
+export interface Chat {
     chat_Id: string;
     chat_title: string;
 }
 
-
-export interface message {
+export interface Message {
     message_Id: string;
     chat_Id: string;
-    user_message: string;
-    ai_message: string;
+    role: 'user' | 'assistant';
+    content: string;
 }
-

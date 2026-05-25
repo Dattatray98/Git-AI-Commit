@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { SYSTEM_PROMPT } from "../utils/prompt";
+import { SYSTEM_PROMPT } from "../utils/prompt.js";
 
 
 export const generateWithOpenAI = async (diff: string, model: string) => {

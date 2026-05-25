@@ -1,5 +1,5 @@
 import { createClient } from "@libsql/client";
-import { configDirPath } from "../config/config";
+import { configDirPath } from "../config/config.js";
 import * as path from "node:path";
 import * as fs from "node:fs/promises"
 

@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { clearChats } from "../memory/chat_memory";
+import { clearChats } from "../memory/chat_memory.js";
 import chalk from "chalk";
 
 

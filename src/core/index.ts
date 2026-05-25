@@ -2,12 +2,12 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
-import { getStagedDiff } from '../git_tools/diff';
-import { filterChanges, parseDiff } from '../git_tools/parser';
-import { checkConfigCommand, configCommand } from '../commands/config';
-import { commitCommand } from '../commands/commit';
-import { asistantCommand } from '../commands/assistant';
-import { clearChatcommand } from '../commands/generalCommands';
+import { getStagedDiff } from '../git_tools/diff.js';
+import { filterChanges, parseDiff } from '../git_tools/parser.js';
+import { checkConfigCommand, configCommand } from '../commands/config.js';
+import { commitCommand } from '../commands/commit.js';
+import { asistantCommand } from '../commands/assistant.js';
+import { clearChatcommand } from '../commands/generalCommands.js';
 
 
 const program = new Command();

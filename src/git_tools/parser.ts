@@ -1,5 +1,5 @@
 import { join } from "node:path";
-import { FileChange } from "../types/filetypes";
+import { FileChange } from "../types/filetypes.js";
 
 export const parseDiff = (rawDiff: string): FileChange[] => {
     try {
