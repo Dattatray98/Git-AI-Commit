@@ -42,6 +42,8 @@ export const commitCommand = new Command("commit")
 
             console.log(commitRes)
 
+            process.exit(1);
+
         } catch (error: any) {
             console.error(error)
             throw error;
