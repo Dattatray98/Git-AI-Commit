@@ -9,8 +9,7 @@ import { NavixConfig } from "../types/config";
 
 const homedir = os.homedir()
 
-const configDirPath = path.join(homedir, '.navix');
-
+export const configDirPath = path.join(homedir, '.navix');
 
 const configFilePath = path.join(configDirPath, "config.json");
 

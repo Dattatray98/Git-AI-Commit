@@ -7,20 +7,22 @@ import { filterChanges, parseDiff } from '../git_tools/parser';
 import { checkConfigCommand, configCommand } from '../commands/config';
 import { commitCommand } from '../commands/commit';
 import { asistantCommand } from '../commands/assistant';
+import { clearChatcommand } from '../commands/generalCommands';
 
 
 const program = new Command();
 
 program.addCommand(configCommand);
 program.addCommand(checkConfigCommand);
-program.addCommand(commitCommand)
-program.addCommand(asistantCommand)
+program.addCommand(commitCommand);
+program.addCommand(asistantCommand);
+program.addCommand(clearChatcommand);
 
 program
   .name('navix')
   .description('AI-powered commit message generator')
   .version('1.1.0');
-  
+
 
 program
   .command("diff")

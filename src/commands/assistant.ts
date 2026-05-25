@@ -1,6 +1,8 @@
 import { Command } from "commander";
 import * as readlines from "readline/promises";
 import { generateWith } from "../models";
+import { randomUUID } from "crypto";
+import { initialize_database, insert_message } from "../memory/chat_memory";
 
 
 const rl = readlines.createInterface({
@@ -8,22 +10,35 @@ const rl = readlines.createInterface({
     output: process.stdout
 });
 
-
 export const asistantCommand = new Command("wake-up")
     .description("wakes the navix assistant.")
     .action(async () => {
         try {
-            while(true){
-                const input = await rl.question("You : ")
+            const chat_id = randomUUID();
+            await initialize_database();
+            console.log("Navix Assistant is awake. Type 'exit()' to leave.\n");
+            while (true) {
+                const input = await rl.question("\nYou : ")
                 const cleaned_input = input.trim()
-                if(cleaned_input === "exit()"){
+                if (cleaned_input === "exit()") {
                     process.exit(1);
                 }
-                const res = await generateWith(cleaned_input)
-                console.log("\n" + res )
+                const message_Id = randomUUID();
+                const res = generateWith(cleaned_input)
+
+                let full_response = "";
+                for await (const chunk of res){
+                    full_response += chunk;
+                    process.stdout.write(chunk);
+                }
+
+                console.log();
+
+                await insert_message(message_Id, chat_id, cleaned_input, full_response);
             }
         } catch (error) {
             console.log(error);
-            throw error;
+            rl.close();
+            process.exit(1);
         }
     })

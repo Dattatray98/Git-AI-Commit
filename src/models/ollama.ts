@@ -13,10 +13,11 @@ export const Ollama_Model = async (prompt: string, model: string) => {
 
         const response = await ollama.generate({
             model: model,
-            prompt:prompt
+            prompt:prompt,
+            stream:true
         });
 
-        const message = response.response;
+        const message = response
         if(!message){
             throw new Error("No response recieved from ollama")
         }

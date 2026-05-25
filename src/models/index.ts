@@ -1,11 +1,9 @@
-import { loadConfig } from "../config/config"
+import { loadConfig } from "../config/config";
 import { Ollama_Model } from "./ollama";
 import { generateWithOpenAI } from "./openai";
+import { GenerateResponse } from "ollama"; // 1. Import the type
 
-
-
-export const generateWith = async (prompt: string): Promise<string> => {
-    console.log(prompt)
+export const generateWith = async function* (prompt: string): AsyncGenerator<string> {
     try {
         if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
             throw new Error("stages are missing!");
@@ -16,21 +14,32 @@ export const generateWith = async (prompt: string): Promise<string> => {
             throw new Error("Configuration is missing");
         }
 
-        let res;
-
         if (config?.provider === "openai") {
-            res = await generateWithOpenAI(prompt, config.model);
-        } else if (config.provider === "ollama") {
-            res = await Ollama_Model(prompt, config.model)
-        } else {
-            throw new Error(`Unsupported provider : ${config.provider}`);
+            // Handle OpenAI streaming here if needed
+            const openAiRes = await generateWithOpenAI(prompt, config.model);
+            // Example if openAiRes yields strings directly:
+            for await (const chunk of openAiRes) {
+                yield chunk;
+            }
+            return;
         }
 
-        if (!res) {
-            throw new Error("Failed to generate commit message");
+        if (config.provider === "ollama") {
+            // 2. Explicitly type the Ollama stream response
+            const res: AsyncIterable<GenerateResponse> = await Ollama_Model(prompt, config.model);
+
+            if (!res) {
+                throw new Error("Failed to generate commit message");
+            }
+
+            // 3. TypeScript now knows 'part' safely has the 'response' property
+            for await (const part of res) {
+                yield part.response;
+            }
+            return;
         }
 
-        return res;
+        throw new Error(`Unsupported provider : ${config.provider}`);
 
     } catch (error) {
         console.error(error);
