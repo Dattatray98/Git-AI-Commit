@@ -4,3 +4,5 @@ node_modules/
 .git
 .vscode
 *.log
+navix-db.session.sql
+notes/
