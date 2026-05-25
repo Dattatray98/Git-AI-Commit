@@ -2,9 +2,10 @@ import { Command } from "commander";
 import { getStagedDiff } from "../git_tools/diff";
 import chalk from "chalk";
 import { filterChanges, parseDiff } from "../git_tools/parser";
-import { generateCommitMessage } from "../models";
+import { generateWith } from "../models";
 import { formateDiff } from "../utils/formatter";
 import { GitCommit } from "../git_tools/commit";
+import { SYSTEM_PROMPT } from "../utils/prompt";
 
 
 export const commitCommand = new Command("commit")
@@ -20,7 +21,9 @@ export const commitCommand = new Command("commit")
     
             const changes = filterChanges(parseDiff(diff));
             const prompt = formateDiff(changes)
-            const message = await generateCommitMessage(prompt)
+
+            const full_prompt = `System : ${SYSTEM_PROMPT}, User : ${prompt}`
+            const message = await generateWith(full_prompt)
     
             if (!message) {
                 console.log(chalk.red("Error while generating message!"));

@@ -1,10 +1,9 @@
 import ollama from "ollama";
-import { SYSTEM_PROMPT } from "../utils/prompt";
 
-export const generateWithOllama = async (diff: string, model: string) => {
+export const Ollama_Model = async (prompt: string, model: string) => {
     try {
 
-        if (!diff) {
+        if (!prompt) {
             throw new Error("staged diff is missing!");
         }
 
@@ -12,16 +11,12 @@ export const generateWithOllama = async (diff: string, model: string) => {
             throw new Error("model name is missing!");
         }
 
-        const response = await ollama.chat({
+        const response = await ollama.generate({
             model: model,
-            messages: [
-                { role: "system", content: SYSTEM_PROMPT },
-                { role: "user", content: diff }
-            ]
+            prompt:prompt
         });
 
-
-        const message = response.message.content;
+        const message = response.response;
         if(!message){
             throw new Error("No response recieved from ollama")
         }

@@ -6,6 +6,7 @@ import { getStagedDiff } from '../git_tools/diff';
 import { filterChanges, parseDiff } from '../git_tools/parser';
 import { checkConfigCommand, configCommand } from '../commands/config';
 import { commitCommand } from '../commands/commit';
+import { asistantCommand } from '../commands/assistant';
 
 
 const program = new Command();
@@ -13,6 +14,7 @@ const program = new Command();
 program.addCommand(configCommand);
 program.addCommand(checkConfigCommand);
 program.addCommand(commitCommand)
+program.addCommand(asistantCommand)
 
 program
   .name('navix')

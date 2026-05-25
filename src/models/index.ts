@@ -1,13 +1,13 @@
 import { loadConfig } from "../config/config"
-import { generateWithOllama } from "./ollama";
+import { Ollama_Model } from "./ollama";
 import { generateWithOpenAI } from "./openai";
 
 
 
-export const generateCommitMessage = async (diff: string): Promise<string> => {
-
+export const generateWith = async (prompt: string): Promise<string> => {
+    console.log(prompt)
     try {
-        if (!diff || typeof diff !== 'string' || diff.trim() === '') {
+        if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
             throw new Error("stages are missing!");
         }
 
@@ -19,9 +19,9 @@ export const generateCommitMessage = async (diff: string): Promise<string> => {
         let res;
 
         if (config?.provider === "openai") {
-            res = await generateWithOpenAI(diff, config.model);
+            res = await generateWithOpenAI(prompt, config.model);
         } else if (config.provider === "ollama") {
-            res = await generateWithOllama(diff, config?.model)
+            res = await Ollama_Model(prompt, config.model)
         } else {
             throw new Error(`Unsupported provider : ${config.provider}`);
         }
