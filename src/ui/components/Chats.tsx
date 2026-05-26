@@ -95,7 +95,6 @@ export const Chats: React.FC<any> = ({ chat_Id }) => {
                     content: 'Something went wrong.'
                 }
             ])
-            await insert_message(assistantMessage);
         } finally {
             setLoading(false);
         }

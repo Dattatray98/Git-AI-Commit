@@ -15,7 +15,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "bun build src/core/index.ts --outdir dist --target=node",
+    "build": "tsc",
     "dev": "bun run src/core/index.ts",
     "prepare": "npm run build"
   },
@@ -55,6 +55,7 @@
     "ink-spinner": "^5.0.0",
     "ink-text-input": "^6.0.0",
     "ollama": "^0.6.3",
+    "onnxruntime-node": "^1.26.0",
     "openai": "^6.37.0",
     "ora": "^9.4.0",
     "react": "^19.2.6",
