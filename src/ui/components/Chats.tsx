@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
 import { Box, Text, useInput } from 'ink'
 import { TextInput } from './TextInput.js';
-import { generateWith } from '../models/index.js';
-import { initialize_database, insert_message } from '../memory/chat_memory.js';
-import { Message } from '../types/chats.js';
+import { generateWith } from '../../models/index.js';
+import { initialize_database, insert_message } from '../../memory/chat_memory.js';
+import { Message } from '../../types/chats.js';
 import { randomUUID } from 'node:crypto';
+import { findRelavantTool } from '../../utils/semanticSearch.js';
+import { buildPlannerPrompt } from '../../utils/prompt.js';
 
 
-export const App: React.FC<any> = ({ chat_Id }) => {
+export const Chats: React.FC<any> = ({ chat_Id }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(false);
 
@@ -55,7 +57,8 @@ export const App: React.FC<any> = ({ chat_Id }) => {
             assistantMessage
         ]);
 
-
+        // const tools = await findRelavantTool(cleaned_input);
+        // const full_prompt = buildPlannerPrompt(cleaned_input, tools);
 
         try {
             const res = generateWith(cleaned_input);

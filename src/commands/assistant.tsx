@@ -1,7 +1,7 @@
 import React from "react";
 import { Command } from "commander";
 import { render } from "ink";
-import { App } from "../components/ui.js";
+import { App } from "../ui/App.js";
 import { randomUUID } from "node:crypto";
 
 export const asistantCommand = new Command("wake-up")

@@ -34,10 +34,10 @@ Generate a commit message based on the provided diff.
 `;
 
 
-export const buildPlannerPrompt = (userPrompt: string, toolNames: string[]) => {
+export const buildPlannerPrompt = (userPrompt: string, toolNames: { tool: string, score: number }[]) => {
   try {
     const tools = toolNames.map((toolname) => {
-      const tool = LocalToolRegistry.get(toolname);
+      const tool = LocalToolRegistry.get(toolname.tool);
 
       if (!tool) {
         return null;

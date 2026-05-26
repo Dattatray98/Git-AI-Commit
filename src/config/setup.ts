@@ -1,5 +1,5 @@
-import { NavixConfig } from "../types/config";
-import { saveConfig } from "./config"
+import { NavixConfig } from "../types/config.js";
+import { saveConfig } from "./config.js"
 
 
 

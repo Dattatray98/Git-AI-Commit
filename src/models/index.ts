@@ -9,15 +9,11 @@ export const generateWith = async function* (prompt: string): AsyncGenerator<str
         if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
             throw new Error("stages are missing!");
         }
-
-        const tools = await findRelavantTool(prompt);
-
         
         const config = await loadConfig();
         if (!config || !config.model || !config.provider) {
             throw new Error("Configuration is missing");
         }
-
         
 
         if (config?.provider === "openai") {
