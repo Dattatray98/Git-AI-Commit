@@ -1,4 +1,5 @@
 import { loadConfig } from "../config/config.js";
+import { findRelavantTool } from "../utils/semanticSearch.js";
 import { Ollama_Model } from "./ollama.js";
 import { generateWithOpenAI } from "./openai.js";
 import { GenerateResponse } from "ollama"; // 1. Import the type
@@ -9,10 +10,15 @@ export const generateWith = async function* (prompt: string): AsyncGenerator<str
             throw new Error("stages are missing!");
         }
 
+        const tools = await findRelavantTool(prompt);
+
+        
         const config = await loadConfig();
         if (!config || !config.model || !config.provider) {
             throw new Error("Configuration is missing");
         }
+
+        
 
         if (config?.provider === "openai") {
             // Handle OpenAI streaming here if needed
@@ -23,6 +29,8 @@ export const generateWith = async function* (prompt: string): AsyncGenerator<str
             }
             return;
         }
+
+
 
         if (config.provider === "ollama") {
             // 2. Explicitly type the Ollama stream response

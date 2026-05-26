@@ -2,7 +2,7 @@ import chalk from "chalk";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as os from "node:os";
-import { NavixConfig } from "../types/config";
+import { NavixConfig } from "../types/config.js";
 
 
 
