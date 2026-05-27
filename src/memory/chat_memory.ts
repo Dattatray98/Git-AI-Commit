@@ -27,21 +27,21 @@ export const initialize_database = async () => {
     }
 };
 
-export const insert_message = async (resMessage:Message) => {
+export const insert_message = async (message_Id:string, chat_Id:string, role:string, content:string) => {
     try {
         const db = await openDb();
-        const chat_title = resMessage.content.slice(0, 25)
+        const chat_title = content.slice(0, 25)
 
         // 1. Ensure the parent chat exists so the foreign key constraint passes
         await db.execute({
             sql: "INSERT OR IGNORE INTO chats(chat_Id, chat_title) VALUES(?, ?)",
-            args: [resMessage.chat_Id, chat_title]
+            args: [chat_Id, chat_title]
         });
 
         // 2. Insert the actual message safely
         await db.execute({
             sql: 'INSERT INTO messages(message_Id, chat_Id, role, content) VALUES(?,?,?,?)',
-            args: [resMessage.message_Id, resMessage.chat_Id, resMessage.role, resMessage.content]
+            args: [message_Id, chat_Id, role, content]
         });
 
     } catch (error: any) {

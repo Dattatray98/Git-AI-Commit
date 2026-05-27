@@ -6,3 +6,4 @@ node_modules
 /notes
 navix-db.session.sql
 *.vscode
+.txt

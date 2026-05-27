@@ -34,10 +34,10 @@ Generate a commit message based on the provided diff.
 `;
 
 
-export const buildPlannerPrompt = (userPrompt: string, toolNames: { tool: string, score: number }[]) => {
+export const buildPlannerPrompt = (userPrompt: string, toolNames: { name: string, score: number }[]) => {
   try {
     const tools = toolNames.map((toolname) => {
-      const tool = LocalToolRegistry.get(toolname.tool);
+      const tool = LocalToolRegistry.get(toolname.name);
 
       if (!tool) {
         return null;
@@ -57,6 +57,8 @@ Your job is to:
 2. Select the BEST tool
 3. Generate valid JSON
 4. Return ONLY JSON
+5. If the tool call not needed then give normal answer
+6. when giving normal answer don't use JSON, give text answer
 
 Available Tools:
 
@@ -71,6 +73,7 @@ Rules:
 - No markdown
 - No explanation
 - Select ONE tool only
+- If tool call not needed the give normal answer
 
 Output Format:
 

@@ -12,6 +12,7 @@ import { buildPlannerPrompt } from '../../utils/prompt.js';
 export const Chats: React.FC<any> = ({ chat_Id }) => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(false);
+    const [thinking, setThinking] = useState(false);
 
     useInput((input, key) => {
         if (input === "Quit" || key.escape) {
@@ -30,59 +31,138 @@ export const Chats: React.FC<any> = ({ chat_Id }) => {
             process.exit(1)
         }
 
+        const tools = await findRelavantTool(cleaned_input);
+        const full_prompt = await buildPlannerPrompt(cleaned_input, tools);
 
         setLoading(true);
 
-        await initialize_database();
-
         const userMessage: Message = {
             message_Id: randomUUID(),
-            chat_Id: chat_Id,
+            chat_Id: chat_Id.chat_Id,
             role: "user",
-            content: cleaned_input
+            content: full_prompt
         }
 
-        await insert_message(userMessage)
+        await insert_message(userMessage.message_Id, userMessage.chat_Id, userMessage.role, cleaned_input)
 
         const assistantMessage: Message = {
             message_Id: randomUUID(),
-            chat_Id: chat_Id,
+            chat_Id: chat_Id.chat_Id,
             role: "assistant",
+            content: ""
+        }
+
+        const thinkingMessage: Message = {
+            message_Id: randomUUID(),
+            chat_Id: chat_Id.chat_Id,
+            role: "thinking",
             content: ""
         }
 
         setMessages(prev => [
             ...prev,
-            userMessage,
-            assistantMessage
+            userMessage
         ]);
 
-        // const tools = await findRelavantTool(cleaned_input);
-        // const full_prompt = buildPlannerPrompt(cleaned_input, tools);
-
         try {
-            const res = generateWith(cleaned_input);
+            const res = await generateWith(full_prompt);
+
 
             let full_response = "";
+            let thinkingText = '';
+
+            assistantMessage.content = full_response;
+            let isAssistantMessage = false;
+            let isThinking = false;
+            let thinkingAdded = false;
 
             for await (const chunk of res) {
-                full_response += chunk;
 
-                setMessages(prev =>
-                    prev.map((msg: any) => {
-                        if (msg.message_Id === assistantMessage.message_Id) {
-                            return {
-                                ...msg,
-                                content: full_response
+                if (chunk.includes("<think>")) {
+                    isThinking = true;
+                    setThinking(true);
+                    continue;
+                }
+
+                if (chunk.includes("</think>")) {
+                    isThinking = false;
+                    setThinking(false);
+                    continue;
+                }
+
+                if (isThinking) {
+                    thinkingText += chunk;
+                } else {
+                    full_response += chunk;
+                }
+
+
+                if (
+                    isThinking &&
+                    thinkingText.trim().length > 0
+                ) {
+
+                    if (!thinkingAdded) {
+
+                        setMessages(prev => [
+                            ...prev,
+                            {
+                                ...thinkingMessage,
+                                content: thinkingText
                             }
-                        }
+                        ]);
 
-                        return msg;
-                    })
-                )
+                        thinkingAdded = true;
+
+                    } else {
+
+                        setMessages(prev =>
+                            prev.map((msg: Message) => {
+
+                                if (
+                                    msg.message_Id ===
+                                    thinkingMessage.message_Id
+                                ) {
+
+                                    return {
+                                        ...msg,
+                                        content: thinkingText
+                                    };
+                                }
+
+                                return msg;
+                            })
+                        );
+                    }
+                }
+
+                if (!isAssistantMessage && full_response.trim().length > 0) {
+                    setMessages(prev => [
+                        ...prev,
+                        {
+                            ...assistantMessage,
+                            content: full_response
+                        }
+                    ]);
+                    isAssistantMessage = true;
+                } else if (isAssistantMessage) {
+                    setMessages(prev =>
+                        prev.map((msg: any) => {
+                            if (msg.message_Id === assistantMessage.message_Id) {
+                                return {
+                                    ...msg,
+                                    content: full_response
+                                }
+                            }
+
+                            return msg;
+                        })
+                    );
+
+                }
             }
 
-            await insert_message(assistantMessage);
+            await insert_message(assistantMessage.message_Id, assistantMessage.chat_Id, assistantMessage.role, full_response);
 
 
         } catch (error) {
@@ -92,7 +172,7 @@ export const Chats: React.FC<any> = ({ chat_Id }) => {
                     message_Id: randomUUID(),
                     chat_Id: chat_Id,
                     role: "assistant",
-                    content: 'Something went wrong.'
+                    content: JSON.stringify(error)
                 }
             ])
         } finally {
@@ -106,33 +186,63 @@ export const Chats: React.FC<any> = ({ chat_Id }) => {
             <Text bold color="greenBright">Navix Assistant</Text>
 
             <Box marginTop={1} flexDirection='column'>
-                {messages.length === 0 ? (
-                    <Text color="gray">Start chatting with navix</Text>
-                ) : (
-                    messages.map((msg: Message) => (
+                {messages.map((msg: Message) => {
+
+                    const isUser =
+                        msg.role === "user";
+
+                    const isAssistant =
+                        msg.role === "assistant";
+
+                    const isThinking =
+                        msg.role === "thinking";
+
+                    return (
+
                         <Box
                             key={msg.message_Id}
                             marginBottom={1}
                             borderStyle="round"
                             borderColor={
-                                msg.role === "user" ? "cyan" : "green"
+                                isUser
+                                    ? "cyan"
+                                    : isThinking
+                                        ? "yellow"
+                                        : "green"
                             }
-                            padding={1}
+                            paddingX={1}
                         >
+
                             <Text>
+
                                 <Text
                                     bold
                                     color={
-                                        msg.role === "user" ? 'cyan' : 'greenBright'
+                                        isUser
+                                            ? "cyan"
+                                            : isThinking
+                                                ? "yellow"
+                                                : "greenBright"
                                     }
                                 >
-                                    {msg.role === "user" ? "you" : "Navix"}
+
+                                    {
+                                        isUser
+                                            ? "You"
+                                            : isThinking
+                                                ? "Thinking"
+                                                : "Navix"
+                                    }
+
                                 </Text>
+
                                 : {msg.content}
+
                             </Text>
+
                         </Box>
-                    ))
-                )}
+                    );
+                })}
             </Box>
 
             {loading && (

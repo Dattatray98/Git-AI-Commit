@@ -6,6 +6,6 @@ export interface Chat {
 export interface Message {
     message_Id: string;
     chat_Id: string;
-    role: 'user' | 'assistant';
+    role: 'user' | 'assistant' | "thinking";
     content: string;
 }

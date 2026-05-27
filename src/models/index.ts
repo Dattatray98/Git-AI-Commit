@@ -9,6 +9,7 @@ export const generateWith = async function* (prompt: string): AsyncGenerator<str
         if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
             throw new Error("stages are missing!");
         }
+        console.log(prompt)
         
         const config = await loadConfig();
         if (!config || !config.model || !config.provider) {
@@ -16,7 +17,7 @@ export const generateWith = async function* (prompt: string): AsyncGenerator<str
         }
         
 
-        if (config?.provider === "openai") {
+        if (config?.provider.toLowerCase() === "openai") {
             // Handle OpenAI streaming here if needed
             const openAiRes = await generateWithOpenAI(prompt, config.model);
             // Example if openAiRes yields strings directly:
@@ -28,7 +29,7 @@ export const generateWith = async function* (prompt: string): AsyncGenerator<str
 
 
 
-        if (config.provider === "ollama") {
+        if (config.provider.toLowerCase() === "ollama") {
             // 2. Explicitly type the Ollama stream response
             const res: AsyncIterable<GenerateResponse> = await Ollama_Model(prompt, config.model);
 

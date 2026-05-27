@@ -1,3 +1,4 @@
+import { initialize_database } from "../memory/chat_memory.js";
 import { createDirectories } from "./directories.js";
 import { initializeModels } from "./model.js";
 import { saveSetUp } from "./state.js";
@@ -41,6 +42,16 @@ export const initializeNavix = async () => {
 
         throw error;
     }
+
+    const DbSpinner = ora(
+        "Initializing database setup"
+    ).start();
+
+    await initialize_database();
+
+    DbSpinner.succeed(
+        "database setup completed."
+    )
 
 
     await saveSetUp({

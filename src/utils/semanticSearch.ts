@@ -33,11 +33,11 @@ const cosineSimilarity = (vecA: number[], vecB: number[]) => {
 export const findRelavantTool = async (query: string, topk: number = 5) => {
     try {
         const inputEm = await createEmbeddings(query);
-        const score: { tool: string, score: number }[] = [];
+        const score: { name: string, score: number }[] = [];
 
         for (const [toolname, toolEmbeddings] of SemanticIndex) {
             const similarity = cosineSimilarity(inputEm, toolEmbeddings);
-            score.push({ tool: toolname, score: similarity });
+            score.push({ name: toolname, score: similarity });
         }
 
         score.sort((a, b) => b.score - a.score);
